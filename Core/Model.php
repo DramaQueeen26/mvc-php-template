@@ -2,8 +2,8 @@
 
 namespace Core;
 
-use App\Config\Config;
 use PDO;
+use Dotenv;
 
 class Model
 {
@@ -20,11 +20,14 @@ class Model
 
     private function openDatabaseConnection()
     {
-        $dsn = sprintf("mysql:host=%s:%s;dbname=%s;charset=%s", Config::DB_HOST, Config::DB_PORT, Config::DB_NAME, Config::DB_CHARSET);
+        $dotenv = Dotenv\Dotenv::createImmutable('../');
+        $dotenv->load();
+
+        $dsn = sprintf("mysql:host=%s:%s;dbname=%s;charset=%s", $_ENV['DB_HOST'], $_ENV['DB_PORT'], $_ENV['DB_NAME'], $_ENV['DB_CHARSET']);
         $options  = [
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ, 
             PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING
         ];
-        $this->db = new PDO($dsn, Config::DB_USER, Config::DB_PASS, $options);
+        $this->db = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $options);
     }
 }
