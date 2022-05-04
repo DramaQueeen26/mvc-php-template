@@ -27,7 +27,12 @@ class Router
                 }
             } else {
                 if (strlen($this->urlAction) == 0) {
-                    $this->urlController->index();
+                    if(method_exists($this->urlController, 'index')){
+                        $this->urlController->index();      
+                    }else{
+                        $page = new \App\Controllers\Error();
+                        $page->pageNotFound($this->urlController, $this->urlAction);
+                    }
                 } else {
                     $page = new \App\Controllers\Error();
                     $page->pageNotFound($this->urlController, $this->urlAction);
