@@ -11,11 +11,15 @@ class View
         $baseUrl = Util::baseUrl();
         extract($args, EXTR_SKIP);
 
-        $file = VIEWS."$header.php";
-        if (is_readable($file)) {
-            require $file;
-        } else {
-            throw new Exception("$file not found");
+        if($header != null){
+
+            $file = VIEWS."$header.php";
+            if (is_readable($file)) {
+                require $file;
+            } else {
+                throw new Exception("$file not found");
+            }
+
         }
 
         foreach ($views as $view) {
@@ -28,12 +32,17 @@ class View
             }
         }
 
-        $file = VIEWS."$footer.php";
-        if (is_readable($file)) {
-            require $file;
-        } else {
-            throw new Exception("$file not found");
+        if($footer != null){
+
+            $file = VIEWS."$footer.php";
+        
+            if (is_readable($file)) {
+                require $file;
+            } else {
+                throw new Exception("$file not found");
+            }
         }
+
         exit;
     }
 
