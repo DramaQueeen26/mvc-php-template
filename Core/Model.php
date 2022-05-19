@@ -30,4 +30,20 @@ class Model
         ];
         $this->db = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $options);
     }
+
+    protected function query($query)
+    {
+        $sql = $this->db->prepare($query);
+        $sql->execute();
+        return $sql;
+    }
+
+    protected function data_query($table, $field, $data)
+    {
+        $query = 'SELECT * FROM ' . $table . ' WHERE ' . $field . ' = :data';
+        $sql = $this->db->prepare($query);
+        $sql->bindParam(':data', $data);
+        $sql->execute();
+        return $sql;
+    }
 }
