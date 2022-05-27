@@ -18,12 +18,12 @@ class Util
     public function cleanString($str, $type)
     {
         $search = array(
-                '@<script[^>]*?>.*?</script>@si',
-                '@<[\/\!]*?[^<>]*?>@si',
-                '@<style[^>]*?>.*?</style>@siU',
-                '@<![\s\S]*?--[ \t\n\r]*>@siU',
-                "/\\\\n/"
-            );
+            '@<script[^>]*?>.*?</script>@si',
+            '@<[\/\!]*?[^<>]*?>@si',
+            '@<style[^>]*?>.*?</style>@siU',
+            '@<![\s\S]*?--[ \t\n\r]*>@siU',
+            "/\\\\n/"
+        );
 
         $str = ini_get('magic_quotes_gpc') ? stripslashes($str) : $str;
         $str = strip_tags(preg_replace($search, '', $str));
