@@ -4,6 +4,7 @@ namespace Core;
 
 class Util
 {
+    // Obtener la URL
     public static function baseUrl()
     {
         $baseUrl = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http');
@@ -12,14 +13,45 @@ class Util
         $baseUrl = str_replace(PUBLIC_FOLDER.'/', '', $baseUrl);
         return $baseUrl;
     }
-    public function cleanString($string)
+
+    // Sanar una cadena
+    public function cleanString($str, $type)
     {
-        $string = trim($string);
-        $string = stripslashes($string);
-        $string = htmlentities($string);
-        $string = addslashes($string);
-        return $string;
+        $search = array(
+                '@<script[^>]*?>.*?</script>@si',
+                '@<[\/\!]*?[^<>]*?>@si',
+                '@<style[^>]*?>.*?</style>@siU',
+                '@<![\s\S]*?--[ \t\n\r]*>@siU',
+                "/\\\\n/"
+            );
+
+        $str = ini_get('magic_quotes_gpc') ? stripslashes($str) : $str;
+        $str = strip_tags(preg_replace($search, '', $str));
+        $str = trim($str);
+        $str = htmlspecialchars($str);
+        $str = stripslashes($str);
+        $str = htmlentities($str);
+        $str = addslashes($str);
+
+        if($type == 'string'){
+
+            $str = filter_var($str, FILTER_SANITIZE_STRING);
+
+        }elseif($type == 'email'){
+
+            $str = filter_var($str, FILTER_SANITIZE_EMAIL);
+
+
+        }elseif($type == 'int'){
+
+            $str = filter_var($str, FILTER_SANITIZE_NUMBER_INT);
+
+        }
+                        
+        return $str;
     }
+
+    // Plugin Sweet Alert
     public function sweetAlert($data)
     {
         if($data['alert'] == "simple"){
@@ -81,5 +113,21 @@ class Util
         }
 
         return $alert;
+    }
+
+    // Mensajes de Bootstrap
+    public function alert($data){
+
+        $alert = '
+
+            <div class="alert alert-'.$data['type'].'" role="alert">
+                <span class="alert-inner--icon"><i class="'.$data['icon'].'"></i></span>
+                <span class="alert-inner--text">'.$data['text'].'</span>
+            </div>
+
+        ';
+
+        return $alert;
+
     }
 }
